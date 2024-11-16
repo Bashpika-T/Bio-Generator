@@ -1,3 +1,5 @@
 transformers
 flask
 flask-cors
+torch>=2.0
+tensorflow>=2.0
