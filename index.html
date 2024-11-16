@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio Generator - DinnerTonight</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>DinnerTonight Bio Generator</h1>
+        <form id="bio-form">
+            <div class="form-group">
+                <label for="career">Choose Your Career/Profession:</label>
+                <select id="career" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Software Engineer">Software Engineer</option>
+                    <option value="Artist">Artist</option>
+                    <option value="Entrepreneur">Entrepreneur</option>
+                    <option value="Chef">Chef</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Musician">Musician</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="personality">Personality Traits:</label>
+                <select id="personality" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Adventurous">Adventurous</option>
+                    <option value="Creative">Creative</option>
+                    <option value="Compassionate">Compassionate</option>
+                    <option value="Outgoing">Outgoing</option>
+                    <option value="Introverted">Introverted</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interests">Interests:</label>
+                <select id="interests" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Cooking">Cooking</option>
+                    <option value="Traveling">Traveling</option>
+                    <option value="Fitness">Fitness</option>
+                    <option value="Music">Music</option>
+                    <option value="Literature">Literature</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Gaming">Gaming</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="relationship-goals">Relationship Goals:</label>
+                <select id="relationship-goals" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Casual">Casual</option>
+                    <option value="Long-term">Long-term</option>
+                    <option value="Adventurous">Adventurous</option>
+                    <option value="Seeking Deep Connection">Seeking Deep Connection</option>
+                </select>
+            </div>
+
+            <button type="submit" id="generate-button">Generate Bio</button>
+        </form>
+
+        <div class="bio-output">
+            <h2>Generated Bio:</h2>
+            <div id="generated-bio">
+                <!-- The generated bio will be displayed here with improved formatting -->
+                <p>Your personalized bio will appear here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // app.js content embedded within the index.html file
+        async function generateBio(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Retrieve the user inputs from the form
+            const career = document.getElementById('career').value;
+            const personality = document.getElementById('personality').value;
+            const interests = document.getElementById('interests').value;
+            const relationshipGoals = document.getElementById('relationship-goals').value;
+
+            // Make a POST request to the backend
+            const response = await fetch('http://127.0.0.1:5000/generate_bio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    career: career,
+                    personality: personality,
+                    interests: interests,
+                    relationshipGoals: relationshipGoals
+                })
+            });
+
+            const data = await response.json();
+
+            // Get the generated bio and display it with formatting
+            const bioOutput = document.getElementById('generated-bio');
+            if (data.bio) {
+                bioOutput.innerHTML = `
+                    <h3><strong>Generated Bio:</strong></h3>
+                    <p><strong>Career/Profession:</strong> ${career}</p>
+                    <p><strong>Personality:</strong> ${personality}</p>
+                    <p><strong>Interests:</strong> ${interests}</p>
+                    <p><strong>Relationship Goals:</strong> ${relationshipGoals}</p>
+                    <p>${data.bio}</p>
+                `;
+            } else {
+                bioOutput.innerHTML = '<p>Error generating bio. Please try again!</p>';
+            }
+        }
+
+        // Add event listener to the form to trigger the function when the user submits
+        document.getElementById('bio-form').addEventListener('submit', generateBio);
+    </script>
+</body>
+</html>
